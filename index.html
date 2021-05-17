@@ -1,0 +1,245 @@
+<!--ERAssignment2
+    Prototype for a web app with jQuery Mobile, using DataBase
+
+    	Revision History
+    		Eleonora Rud, 2015/02/26: Created
+-->
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>ER Feedback A3</title>
+	<link href="css/themes/default/jquery.mobile-1.1.1.css" rel="stylesheet" type="text/css" />
+    <link href="css/custom.css" rel="stylesheet" type="text/css" />
+	 <!-- JavaScript HTML requirements -->
+
+    <script src="js/jquery.js" type="text/javascript"></script>
+	<script src="lib/jquery.validate.js" type="text/javascript"></script>
+    <script src="js/jquery.mobile-1.1.1.min.js" type="text/javascript"></script>
+    <script src="js/geo.js" type="text/javascript"></script>
+	<script src="js/ERglobal.js" type="text/javascript"></script>
+	<script src="js/ERdatabase.js" type="text/javascript"></script>
+	<script src="js/ERutil.js" type="text/javascript"></script>
+	<script src="js/ERabout.js" type="text/javascript"></script>
+
+
+<style type="text/css" media="screen">
+	label.error {
+		color: #FF0000;
+		font-weight:bold;
+		}
+		.pad{
+		padding-bottom: 2px;
+		}
+</style>
+</head>
+
+<body>
+<div data-role="page" id="erHome">
+  <header data-role="header">
+        <h1>ER Feedback A3</h1>
+        <div data-role="navbar">
+		<ul>
+			<li><a href="#erHome" data-icon="home" data-theme="d" class="ui-btn-active ui-state-persist">Home</a></li>
+			<li><a href="#erAddFeedBack" data-icon="plus" data-theme="c">Add</a></li>
+            <li><a href="#erViewFeedBack" data-icon="grid" data-theme="c">Reviews</a></li>
+            <li><a href="#erSettings" data-icon="gear" data-theme="c">Settings</a></li>
+		</ul>
+		</div>
+   </header>
+
+	<section data-role="content">
+		<h1>Eleonora`s Feedback A3 App</h1>
+		<p>Welcome to the Eleonora`s Feedback A3 app, a prototype designed for mobile programming class.
+		This is the first iteration of the app to keep track of different places you visited along with your reviews.<p/>
+		<img src="images/feedback.jpg" alt="feedback" />
+
+		<p>Please feel free to contact me if you have any suggestions!</p>
+		<div id="contact_buttons">
+			<a href="tel:5197485220" data-role="button" data-icon="plus">Call:519.748.5220</a>
+		</div>
+		<div id="contact_buttons">
+			<a href="mailto:erud-cc@conestogac.on.ca" data-role="button" data-icon="plus">erud-cc@conestogac.on.ca</a>
+		</div>
+		<p><strong>LinkedIn:</strong></p>
+		<div id="contact_buttons">
+			<a href="https://www.linkedin.com/profile/view?id=207730003&trk=nav_responsive_tab_profile_pic" target="_blank" data-role="button" data-icon="plus">Eleonora Rud</a>
+		</div>
+		<div id="aboutButton">
+			<input type="button" value="About" onclick="displayAbout();"/>
+		</div>
+	</section>
+	<footer data-role="footer" data-position="fixed">
+        <h4>&copy; 2015</h4>
+    </footer>
+</div>
+
+<div data-role="page" id="erAddFeedBack">
+  <header data-role="header">
+        <h1>Add a Feedback</h1>
+        <div data-role="navbar">
+		<ul>
+			<li><a href="#erHome" data-icon="home" data-theme="c" >Home</a></li>
+			<li><a href="#erAddFeedBack" data-icon="plus" data-theme="d" class="ui-btn-active ui-state-persist">Add</a></li>
+            <li><a href="#erViewFeedBack" data-icon="grid" data-theme="c">Reviews</a></li>
+            <li><a href="#erSettings" data-icon="gear" data-theme="c">Settings</a></li>
+		</ul>
+		</div>
+   </header>
+
+	<section data-role="content">
+	<form id="erAddForm" name="erAddForm" data-ajax="false">
+		<label for="erName"><strong>Business name:</strong></label>
+			<input type="text" name="erName" id="erName"  data-mini="true" />
+
+		<label for="erType" class="select"><strong>Type:</strong></label>
+			<select name="erType" id="erType"> </select>
+
+		<label for="erEmail"><strong>Reviewer Email:</strong></label>
+			<input type="text" name="erEmail" id="erEmail" value="" />
+
+		<label for="erComments"><strong>Reviewer Comments:</strong></label>
+			<textarea name="erComments" id="erComments"></textarea>
+
+		<label for="erDate" ><strong>Reviewer Date:</strong></label>
+			<input id="erDate" name="erDate" type="date" class="required date ui-input-text ui-body-c ui-corner-all ui-shadow-insert">
+
+		<label><input type="checkbox" name="erAddRating" id="erAddRating" /><strong>Do you want to add your rating?</strong></label>
+
+		<div id="erAddRatingEntry" style="display:none;">
+			<label for="erFoodQuality">Food Quality (0-5):</label>
+				<input type="number" name="erFoodQuality" id="erFoodQuality" value="" />
+
+			<label for="erService">Service (0-5):</label>
+				<input type="number" name="erService" id="erService" value="" />
+
+			<label for="erValue">Value (0-5):</label>
+				<input type="number" name="erValue" id="erValue" value=""/>
+			
+			<label for="erOverall" ><strong>Overall Rating(Calculated):</strong></label>
+				<input readonly type="text"  name="erOverall" id="erOverall" value=""  />
+		</div>
+	
+		<input type="button" id ="erSave" value="Save" data-inline="true" data-theme="b" />
+	</form>
+	</section>
+
+	<footer data-role="footer" data-position="fixed">
+        <h4>&copy; 2015</h4>
+    </footer>
+</div>
+
+<div data-role="page" id="erViewFeedBack">
+  <header data-role="header">
+        <h1>List of Reviews</h1>
+        <div data-role="navbar">
+		<ul>
+			<li><a href="#erHome" data-icon="home" data-theme="c" >Home</a></li>
+			<li><a href="#erAddFeedBack" data-icon="plus" data-theme="c" >Add</a></li>
+            <li><a href="#erViewFeedBack" data-icon="grid" data-theme="d"class="ui-btn-active ui-state-persist">Reviews</a></li>
+            <li><a href="#erSettings" data-icon="gear" data-theme="c">Settings</a></li>
+		</ul>
+		</div>
+   </header>
+
+	<section data-role="content">
+		<ul id="erFeedBackList" data-role="listview" data-filter="true" data-input="erFeedBackList" data-inset="true">
+		</ul>
+	</section>
+	
+	
+	
+	<footer data-role="footer" data-position="fixed">
+        <h4>&copy; 2015</h4>
+    </footer>
+</div>
+
+<div data-role="page" id="erSettings">
+  <header data-role="header">
+        <h1>Settings</h1>
+        <div data-role="navbar">
+		<ul>
+			<li><a href="#erHome" data-icon="home" data-theme="c" >Home</a></li>
+			<li><a href="#erAddFeedBack" data-icon="plus" data-theme="c" >Add</a></li>
+            <li><a href="#erViewFeedBack" data-icon="grid" data-theme="c">Reviews</a></li>
+            <li><a href="#erSettings" data-icon="gear" data-theme="d"class="ui-btn-active ui-state-persist" >Settings</a></li>
+		</ul>
+		</div>
+   </header>
+	<section data-role="content">
+	<form id="erEmailValidation"  name="erEmailValidation">
+	<label for="erDefaultEmail"><strong>Default reviewer email:</strong></label>
+			<input type="text" name="defaultEmail" id="erDefaultEmail" value=""  />
+			<input type="button" name="save" id="erSaveDefault" value="Save Defaults" data-theme="b"/>
+			<input type="button" name ="clear" id = "erClear" value="Clear Database" data-theme="a"/>
+	</form>
+	</section>
+	<footer data-role="footer" data-position="fixed">
+        <h4>&copy; 2015</h4>
+    </footer>
+</div>
+
+<div data-role="page" id="erEditFeedback">
+  <header data-role="header">
+        <h1>Modify Reviews</h1>
+        <div data-role="navbar">
+		<ul>
+			<li><a href="#erHome" data-icon="home" data-theme="c" >Home</a></li>
+			<li><a href="#erAddFeedBack" data-icon="plus" data-theme="c" >Add</a></li>
+            <li><a href="#erViewFeedBack" data-icon="grid" data-theme="d"class="ui-btn-active ui-state-persist">Reviews</a></li>
+            <li><a href="#erSettings" data-icon="grid" data-theme="c">Settings</a></li>
+		</ul>
+		</div>
+   </header>
+
+	<section data-role="content">
+	<form id="erEditForm" name="erEditForm" data-ajax="false">
+		<label for="erEditName"><strong>Business name:</strong></label>
+			<input type="text" name="erEditName" id="erEditName"  data-mini="true" />
+
+		<label for="erEditType" class="select"><strong>Type:</strong></label>
+			<select name="erEditType" id="erEditType"> </select>
+
+		<label for="erEditEmail"><strong>Reviewer Email:</strong></label>
+			<input type="text" name="erEditEmail" id="erEditEmail" value="" />
+
+		<label for="erEditComments"><strong>Reviewer Comments:</strong></label>
+			<textarea name="erEditComments" id="erEditComments"></textarea>
+
+		<label for="erEditDate" ><strong>Reviewer Date:</strong></label>
+			<input id="erEditDate" name="erEditDate" type="date" class="required date ui-input-text ui-body-c ui-corner-all ui-shadow-insert">
+
+		<label><input type="checkbox" name="erEditRating" id="erEditRating"/><strong>Do you want to add your rating?</strong></label>
+
+		<div id="erEditRatingEntry" style="display:none;">
+			<label for="erEditFoodQuality">Food Quality (0-5):</label>
+				<input type="number" name="erEditFoodQuality" id="erEditFoodQuality" value="" />
+
+			<label for="erEditService">Service (0-5):</label>
+				<input type="number" name="erEditService" id="erEditService" value="" />
+
+			<label for="erEditValue">Value (0-5):</label>
+				<input type="number" name="erEditValue" id="erEditValue" value=""/>
+			
+			<label for="erEditOverall" ><strong>Overall Rating(Calculated):</strong></label>
+				<input readonly type="text"  name="erEditOverall" id="erEditOverall" value=""  />
+		</div>
+	</form>
+	<div data-role="controlgroup" data-type="horizontal">
+		<a href = "#erViewFeedBack"><input type="button" value="Cancel" data-theme="e"/></a>
+		
+		<input type="button"  id="erDelete" value="Delete"  data-theme="a"/>
+		<input type="submit" id="erUpdate" value="Update"  data-theme="b"/>
+	</div>
+	</section>
+
+	<footer data-role="footer"data-position="fixed">
+        <h4>&copy; 2015</h4>
+    </footer>
+</div>
+</body>
+</html>
+
+
+
